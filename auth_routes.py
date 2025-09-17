@@ -47,12 +47,12 @@ def authorized():
             "preferred_username": result["id_token_claims"].get("preferred_username"),
             "oid": result["id_token_claims"].get("oid"),
         }
-        return redirect(url_for("dashboard.dashboard_home"))
+        return redirect(url_for("index"))
     return "Login failed", 400
 
 @auth_bp.route("/logout")
 def logout():
     session.clear()
     return redirect(
-        f"{AUTHORITY}/oauth2/v2.0/logout?post_logout_redirect_uri={url_for('dashboard.dashboard_home', _external=True)}"
+        f"{AUTHORITY}/oauth2/v2.0/logout?post_logout_redirect_uri={url_for('index', _external=True)}"
     )
