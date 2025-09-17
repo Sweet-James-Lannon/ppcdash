@@ -18,7 +18,8 @@ import random
 from urllib.parse import urlparse
 import demo_data  # Import the demo data module
 from performance_boost import optimize_app, global_cache, daily_cache, time_it, parallel_fetch
-
+import os
+from auth_routes import auth_bp
 
 # Load environment variables
 load_dotenv()
@@ -50,7 +51,10 @@ except ImportError:
 
 # Initialize Flask app
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'sweet-james-2025')
+
+app.secret_key = os.getenv('SECRET_KEY', 'sweet-james-temp-key-2025')
+app.register_blueprint(auth_bp)
+
 CORS(app)
 
 
