@@ -16,16 +16,16 @@ SCOPE = config.AZURE_SCOPE
 @auth_bp.route("/login")
 def login():
     try:
-        # Test if environment variables are available
-        if not CLIENT_ID:
-            return "Missing CLIENT_ID", 500
-        if not CLIENT_SECRET:
-            return "Missing CLIENT_SECRET", 500
-        if not TENANT_ID:
-            return "Missing TENANT_ID", 500
-            
-        return f"Auth variables OK. CLIENT_ID: {CLIENT_ID[:10]}..."
-        
+        session["state"] = str(uuid.uuid4())
+        auth_app = ConfidentialClientApplication(
+            CLIENT_ID, authority=AUTHORITY, client_credential=CLIENT_SECRET
+        )
+        auth_url = auth_app.get_authorization_request_url(
+            SCOPE,
+            state=session["state"],
+            redirect_uri=config.AUTH_REDIRECT_URI
+        )
+        return redirect(auth_url)
     except Exception as e:
         return f"Error in login route: {str(e)}", 500
 
